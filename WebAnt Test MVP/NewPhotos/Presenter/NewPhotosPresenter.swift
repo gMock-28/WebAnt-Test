@@ -10,7 +10,8 @@ import UIKit
 import Alamofire
 
 protocol NewPhotosPresenterDelegate: AnyObject {
-    func presentPhotos(photos: [Photo]?, error: Errors?)
+    func presentPhotos(photos: [CustomCell.Model])
+    func performErrors(error: Errors)
     func presentDetails()
 }
 
@@ -18,6 +19,7 @@ typealias NewPresenterDelegate = NewPhotosPresenterDelegate & UIViewController
 
 class NewPhotosPresenter {
     
+    private var totalPages = 1
     private var page = 0
     
     weak var delegate: NewPresenterDelegate?
@@ -26,25 +28,40 @@ class NewPhotosPresenter {
         self.delegate = delegate
     }
     
-    public func getNewPhotos() {
-        self.page += 1
-        if page <= 23 {
-            let url = "http://gallery.dev.webant.ru/api/photos?page=\(page)"
-            
-            getNewPage(url: url) { (response) in
-                if response != nil {
-                    var photos = response?.data
-                    photos?.removeAll(where: { $0.new == false })
-                    self.delegate?.presentPhotos(photos: photos!, error: nil)
-                } else {
-                    self.delegate?.presentPhotos(photos: nil, error: Errors.noInternetConnection)
-                }
-            }
+    public func getNewPhotos(refresh: Bool) {
+        
+        if refresh {
+            self.page = 1
         } else {
-            self.delegate?.presentPhotos(photos: nil, error: Errors.lastPage)
+            self.page += 1
         }
         
-        
+        if page <= totalPages {
+            
+            print("PAGE NUMBER: \(page)")
+            
+            let url = "http://gallery.dev.webant.ru/api/photos?page=\(page)"
+            
+            getNewPage(url: url) { [weak self] (response) in
+                if let response = response {
+                    
+                    self?.totalPages = response.countOfPages
+
+                    let items: [CustomCell.Model] = response.data
+                        .filter({ $0.new == true })
+                        .map {
+                            CustomCell.Model(url: URL(string: "http://gallery.dev.webant.ru/media/\($0.image.name)"))
+                        }
+                    
+                    self?.delegate?.presentPhotos(photos: items)
+                } else {
+                    self?.delegate?.performErrors(error: Errors.noInternetConnection)
+                }
+            }
+            
+        } else {
+            self.delegate?.performErrors(error: Errors.lastPage)
+        }
     }
     
     // MARK: - Network
@@ -61,27 +78,9 @@ class NewPhotosPresenter {
                 } catch {
                     print(error)
                 }
-                
-            case .failure(let error):
-                print(error)
-                completion(nil)
-            }
-        }
-    }
-    
-    public func fetchImage(name: String, completion: @escaping (UIImage?)->()) {
-        guard let url = URL(string: "http://gallery.dev.webant.ru/media/\(name)") else { return }
-        
-        AF.request(url).validate().responseData { (response) in
-            switch response.result {
-            case .success(let data):
-                let image = UIImage(data: data)
-                completion(image)
-                
             case .failure(let error):
                 print(error)
             }
         }
     }
-    
 }

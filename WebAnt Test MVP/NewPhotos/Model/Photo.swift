@@ -9,21 +9,21 @@ import Foundation
 
 struct Photo {
     let id: Int
-    let name: String
+    let name: String?
     let dateCreate: String
-    let description: String
-    let new: Bool
-    let popular: Bool
+    let description: String?
+    let new: Bool?
+    let popular: Bool?
     let image: Image
     let user: Any
     
     init?(json: [String: Any]) {
         let id = json["id"] as! Int
-        let name = json["name"] as! String
+        let name = json["name"] as? String
         let dateCreate = json["dateCreate"] as! String
-        let description = json ["description"] as! String
-        let new = json["new"] as! Bool
-        let popular = json["popular"] as! Bool
+        let description = json ["description"] as? String
+        let new = json["new"] as? Bool
+        let popular = json["popular"] as? Bool
         let image = Image(json: json["image"] as Any)!
         let user = json["user"]!
         

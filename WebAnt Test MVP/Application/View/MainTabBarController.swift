@@ -15,8 +15,7 @@ class MainTabBarController: UITabBarController {
         
         let newVC = NewPhotosViewController() // = NewCollectionViewController.loadFromStoryBoard()
         
-        tabBar.tintColor = .black
-        view.backgroundColor = .white
+        tabBar.tintColor = .gray
         tabBar.tintColor = UIColor(red:0.992, green:0.176, blue:0.333, alpha:1.00)
         
         viewControllers = [
@@ -47,6 +46,7 @@ class MainTabBarController: UITabBarController {
         navigationVC.tabBarItem.image = UIImage(systemName: imageResourceName)
         navigationVC.tabBarItem.title = title
         rootViewController.navigationItem.title = title
+        
         navigationVC.navigationBar.prefersLargeTitles = true
         
         return navigationVC

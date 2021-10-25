@@ -7,21 +7,25 @@
 
 import Foundation
 import UIKit
+import SwiftUI
+
+
 
 class CustomCell: UICollectionViewCell {
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
+    struct Model {
+        let url: URL?
+    }
+    
+    private let customImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 7
-
-        imageView.image = UIImage()
-        
         return imageView
     }()
     
-    let activityIndicator: UIActivityIndicatorView = {
+    private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
@@ -34,7 +38,7 @@ class CustomCell: UICollectionViewCell {
         
         // Background
         contentView.backgroundColor = .secondaryLabel
-        contentView.layer.cornerRadius = imageView.layer.cornerRadius
+        contentView.layer.cornerRadius = customImageView.layer.cornerRadius
         
         // Activity Indicator
         contentView.addSubview(activityIndicator)
@@ -45,12 +49,12 @@ class CustomCell: UICollectionViewCell {
         activityIndicator.startAnimating()
 
         // Image View
-        contentView.addSubview(imageView)
+        contentView.addSubview(customImageView)
         
-        imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-        imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        customImageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        customImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        customImageView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        customImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
     required init?(coder: NSCoder) {
@@ -60,6 +64,25 @@ class CustomCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.imageView.image = nil
+        self.customImageView.image = nil
+    }
+    
+    func configure(model: Model) {
+        
+        // Background
+        contentView.backgroundColor = .secondaryLabel
+        contentView.layer.cornerRadius = customImageView.layer.cornerRadius
+        
+        // Activity Indicator
+        contentView.addSubview(activityIndicator)
+        
+        activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        activityIndicator.startAnimating()
+        
+        customImageView.loadImage(url: model.url) { [weak self] (result) in
+            self?.activityIndicator.stopAnimating()
+        }
     }
 }
