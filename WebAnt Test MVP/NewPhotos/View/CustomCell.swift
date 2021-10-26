@@ -12,9 +12,6 @@ import SwiftUI
 
 
 class CustomCell: UICollectionViewCell {
-    struct Model {
-        let url: URL?
-    }
     
     private let customImageView: CustomImageView = {
         let imageView = CustomImageView()
@@ -39,14 +36,6 @@ class CustomCell: UICollectionViewCell {
         // Background
         contentView.backgroundColor = .secondaryLabel
         contentView.layer.cornerRadius = customImageView.layer.cornerRadius
-        
-        // Activity Indicator
-        contentView.addSubview(activityIndicator)
-        
-        activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        
-        activityIndicator.startAnimating()
 
         // Image View
         contentView.addSubview(customImageView)
@@ -55,6 +44,7 @@ class CustomCell: UICollectionViewCell {
         customImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
         customImageView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
         customImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
     }
     
     required init?(coder: NSCoder) {
@@ -67,11 +57,7 @@ class CustomCell: UICollectionViewCell {
         self.customImageView.image = nil
     }
     
-    func configure(model: Model) {
-        
-        // Background
-        contentView.backgroundColor = .secondaryLabel
-        contentView.layer.cornerRadius = customImageView.layer.cornerRadius
+    func configure(model: CellModel) {
         
         // Activity Indicator
         contentView.addSubview(activityIndicator)
@@ -81,8 +67,10 @@ class CustomCell: UICollectionViewCell {
         
         activityIndicator.startAnimating()
         
+        // Loading image
         customImageView.loadImage(url: model.url) { [weak self] (result) in
             self?.activityIndicator.stopAnimating()
         }
+    
     }
 }

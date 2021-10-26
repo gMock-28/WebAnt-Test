@@ -12,7 +12,7 @@ class NewPhotosViewController: UIViewController {
     let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     private let presenter = NewPhotosPresenter()
-    private var photos = [CustomCell.Model]()
+    private var photos = [CellModel]()
 
     lazy var collectionView: UICollectionView = {
         
@@ -49,7 +49,7 @@ class NewPhotosViewController: UIViewController {
         
         // Presenter
         presenter.setViewDelegate(delegate: self)
-        presenter.getNewPhotos(refresh: false)
+        presenter.getNewPhotos(refresh: true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -99,6 +99,8 @@ extension NewPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User Tapped!")
+        let imageDetails = ImageDetailsViewController(photos[indexPath.row])
+        self.present(imageDetails, animated: true, completion: nil)
     }
     
 }
@@ -106,13 +108,13 @@ extension NewPhotosViewController: UICollectionViewDelegate {
 // MARK: - NewPhotosPresenterDelegate
 
 extension NewPhotosViewController: NewPhotosPresenterDelegate {
-    func presentPhotos(photos: [CustomCell.Model]) {
+    func presentPhotos(photos: [CellModel]) {
+        let indexPath = IndexPath(row: self.photos.count, section: 0)
         self.photos.append(contentsOf: photos)
         spinner.stopAnimating()
-        self.collectionView.reloadData()
+        self.collectionView.insertItems(at: [indexPath])
         
-        print(photos.count)
-        print("Everything is well!")
+        print("Number of photos: \(photos.count)")
     }
     
     func performErrors(error: Errors) {

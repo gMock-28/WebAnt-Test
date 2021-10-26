@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 protocol NewPhotosPresenterDelegate: AnyObject {
-    func presentPhotos(photos: [CustomCell.Model])
+    func presentPhotos(photos: [CellModel])
     func performErrors(error: Errors)
     func presentDetails()
 }
@@ -47,10 +47,12 @@ class NewPhotosPresenter {
                     
                     self?.totalPages = response.countOfPages
 
-                    let items: [CustomCell.Model] = response.data
+                    let items: [CellModel] = response.data
                         .filter({ $0.new == true })
                         .map {
-                            CustomCell.Model(url: URL(string: "http://gallery.dev.webant.ru/media/\($0.image.name)"))
+                            CellModel(name: String(describing: $0.name),
+                                      description: String(describing: $0.description),
+                                      url: URL(string: "http://gallery.dev.webant.ru/media/\($0.image.name)"))
                         }
                     
                     self?.delegate?.presentPhotos(photos: items)
