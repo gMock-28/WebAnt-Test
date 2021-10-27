@@ -9,10 +9,29 @@ import UIKit
 
 class NewPhotosViewController: UIViewController {
     
-    let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
-    
     private let presenter = NewPhotosPresenter()
     private var photos = [CellModel]()
+    
+    // MARK: - Subviews
+    
+    let noInternetImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        
+        imageView.image = UIImage(named: "NoInternetPic")
+        
+        return imageView
+    }()
+    
+    let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+    
+    private let refreshControl = UIRefreshControl()
+    
+    @objc private func refreshPhotosList(_ sender: Any) {
+        presenter.getNewPhotos(refresh: true)
+    }
 
     lazy var collectionView: UICollectionView = {
         
@@ -38,14 +57,27 @@ class NewPhotosViewController: UIViewController {
         
         (collection.collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize = CGSize(width: collection.bounds.width, height: 50)
         
+        collection.refreshControl = refreshControl
+        
         return collection
     }()
     
+    //MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .darkGray
 
         // Collection
         view.addSubview(collectionView)
+        
+        // No Internet Image
+        view.addSubview(noInternetImage)
+        noInternetConstraints()
+        
+        // Refresh Control
+        refreshControl.addTarget(self, action: #selector(refreshPhotosList(_:)), for: .valueChanged)
         
         // Presenter
         presenter.setViewDelegate(delegate: self)
@@ -55,6 +87,17 @@ class NewPhotosViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.frame = view.bounds
+    }
+    
+    func noInternetConstraints() {
+        NSLayoutConstraint.activate([
+            noInternetImage.leftAnchor.constraint(equalTo: view.leftAnchor,
+                                                   constant: 24),
+            noInternetImage.rightAnchor.constraint(equalTo: view.rightAnchor,
+                                                    constant: -24),
+            noInternetImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            noInternetImage.heightAnchor.constraint(equalTo: noInternetImage.widthAnchor)
+        ])
     }
     
 }
@@ -99,7 +142,7 @@ extension NewPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User Tapped!")
-        let imageDetails = ImageDetailsViewController(photos[indexPath.row])
+        let imageDetails = ImageDetailsViewController(model: photos[indexPath.row])
         self.present(imageDetails, animated: true, completion: nil)
     }
     
@@ -108,18 +151,31 @@ extension NewPhotosViewController: UICollectionViewDelegate {
 // MARK: - NewPhotosPresenterDelegate
 
 extension NewPhotosViewController: NewPhotosPresenterDelegate {
-    func presentPhotos(photos: [CellModel]) {
-        let indexPath = IndexPath(row: self.photos.count, section: 0)
-        self.photos.append(contentsOf: photos)
-        spinner.stopAnimating()
-        self.collectionView.insertItems(at: [indexPath])
-        
-        print("Number of photos: \(photos.count)")
+    func presentPhotos(photos: [CellModel], refresh: Bool) {
+        if refresh {
+            self.photos = photos
+            self.collectionView.reloadData()
+            self.refreshControl.endRefreshing()
+            
+            noInternetImage.isHidden = true
+        } else {
+            let indexPath = IndexPath(row: self.photos.count, section: 0)
+            self.photos.append(contentsOf: photos)
+            spinner.stopAnimating()
+            self.collectionView.insertItems(at: [indexPath])
+        }
     }
     
     func performErrors(error: Errors) {
         switch error {
         case .noInternetConnection:
+            photos.removeAll()
+            spinner.stopAnimating()
+            collectionView.reloadData()
+            
+            noInternetImage.isHidden = false
+            self.refreshControl.endRefreshing()
+
             print("No internet connection!")
         case .unableToParseData:
             print("Unable to parse data!")
@@ -128,10 +184,5 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
             spinner.stopAnimating()
         }
     }
-    
-    func presentDetails() {
-        print("Detail of the pic should shown!")
-    }
-    
 }
 

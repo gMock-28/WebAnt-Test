@@ -10,9 +10,8 @@ import UIKit
 import Alamofire
 
 protocol NewPhotosPresenterDelegate: AnyObject {
-    func presentPhotos(photos: [CellModel])
+    func presentPhotos(photos: [CellModel], refresh: Bool)
     func performErrors(error: Errors)
-    func presentDetails()
 }
 
 typealias NewPresenterDelegate = NewPhotosPresenterDelegate & UIViewController
@@ -30,6 +29,8 @@ class NewPhotosPresenter {
     
     public func getNewPhotos(refresh: Bool) {
         
+        print("GetNewPhotos")
+        
         if refresh {
             self.page = 1
         } else {
@@ -38,27 +39,20 @@ class NewPhotosPresenter {
         
         if page <= totalPages {
             
-            print("PAGE NUMBER: \(page)")
-            
             let url = "http://gallery.dev.webant.ru/api/photos?page=\(page)"
             
             getNewPage(url: url) { [weak self] (response) in
-                if let response = response {
-                    
-                    self?.totalPages = response.countOfPages
-
-                    let items: [CellModel] = response.data
-                        .filter({ $0.new == true })
-                        .map {
-                            CellModel(name: String(describing: $0.name),
-                                      description: String(describing: $0.description),
-                                      url: URL(string: "http://gallery.dev.webant.ru/media/\($0.image.name)"))
-                        }
-                    
-                    self?.delegate?.presentPhotos(photos: items)
-                } else {
-                    self?.delegate?.performErrors(error: Errors.noInternetConnection)
-                }
+                
+                self?.totalPages = response!.countOfPages
+                let items: [CellModel] = response!.data
+                    .filter({ $0.new == true })
+                    .map {
+                        CellModel(name: $0.name ?? "",
+                                  description: $0.description ?? "",
+                                  url: URL(string: "http://gallery.dev.webant.ru/media/\($0.image.name)"))
+                    }
+                
+                self?.delegate?.presentPhotos(photos: items, refresh: refresh)
             }
             
         } else {
@@ -69,11 +63,13 @@ class NewPhotosPresenter {
     // MARK: - Network
     
     private func getNewPage(url: String, completion: @escaping (GetPhotosResponse?) -> ()){
-        guard let url = URL(string: url) else { return }
-        
+//        guard let url = URL(string: url) else { return }
+        print("GetNewPage")
         AF.request(url).validate().responseJSON { (response) in
+            print("Request was made")
             switch response.result {
             case .success(let json):
+                print("success")
                 do {
                     let response = try GetPhotosResponse(json: json)
                     completion(response)
@@ -81,7 +77,13 @@ class NewPhotosPresenter {
                     print(error)
                 }
             case .failure(let error):
-                print(error)
+                print("Failure")
+                self.delegate?.performErrors(error: Errors.noInternetConnection)
+                
+//                if let err = error as? URLError, err.code  == URLError.Code.notConnectedToInternet {
+//                    print(error)
+//                    self.delegate?.performErrors(error: Errors.noInternetConnection)
+//                }
             }
         }
     }
