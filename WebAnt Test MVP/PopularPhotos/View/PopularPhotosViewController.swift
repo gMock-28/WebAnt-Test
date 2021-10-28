@@ -1,16 +1,17 @@
 //
-//  NewPhotosViewController.swift
+//  PopularPhotosViewController.swift
 //  WebAnt Test MVP
 //
-//  Created by Gold_Mock on 24.10.2021.
+//  Created by Gold_Mock on 28.10.2021.
 //
 
+import Foundation
 import UIKit
 
-class NewPhotosViewController: UIViewController {
+class PopularPhotosViewController: UIViewController {
     
-    private let presenter = NewPhotosPresenter()
-    private var photos = [CellModel]()
+    private let presenter = PopularPhotosPresenter()
+    private var popularPhotos = [CellModel]()
     
     // MARK: - Subviews
     
@@ -125,15 +126,15 @@ class NewPhotosViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource & UICollectionViewDelegate
 
-extension NewPhotosViewController: UICollectionViewDataSource {
+extension PopularPhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        return self.popularPhotos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! CustomCell
-        cell.configure(model: photos[indexPath.row])
+        cell.configure(model: popularPhotos[indexPath.row])
         
         return cell
     }
@@ -151,7 +152,7 @@ extension NewPhotosViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == photos.count - 1 {
+        if indexPath.row == popularPhotos.count - 1 {
             self.spinner.startAnimating()
             presenter.getNewPhotos(refresh: false)
         }
@@ -159,11 +160,11 @@ extension NewPhotosViewController: UICollectionViewDataSource {
     
 }
 
-extension NewPhotosViewController: UICollectionViewDelegate {
+extension PopularPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User Tapped!")
-        let imageDetails = ImageDetailsViewController(model: photos[indexPath.row])
+        let imageDetails = ImageDetailsViewController(model: popularPhotos[indexPath.row])
         self.present(imageDetails, animated: true, completion: nil)
     }
     
@@ -171,27 +172,27 @@ extension NewPhotosViewController: UICollectionViewDelegate {
 
 // MARK: - NewPhotosPresenterDelegate
 
-extension NewPhotosViewController: NewPhotosPresenterDelegate {
+extension PopularPhotosViewController: PopularPhotosPresenterDelegate {
     func presentPhotos(photos: [CellModel], refresh: Bool) {
         if refresh {
-            self.photos = photos
+            self.popularPhotos = photos
             self.collectionView.reloadData()
             self.refreshControl.endRefreshing()
             
             noInternetImage.isHidden = true
             noInternetLabel.isHidden = true
         } else {
-            let indexPath = IndexPath(row: self.photos.count, section: 0)
-            self.photos.append(contentsOf: photos)
+            self.popularPhotos.append(contentsOf: photos)
+
             spinner.stopAnimating()
-            self.collectionView.insertItems(at: [indexPath])
+            self.collectionView.reloadData()
         }
     }
     
     func performErrors(error: Errors) {
         switch error {
         case .noInternetConnection:
-            photos.removeAll()
+            popularPhotos.removeAll()
             spinner.stopAnimating()
             collectionView.reloadData()
             
@@ -208,4 +209,3 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
         }
     }
 }
-

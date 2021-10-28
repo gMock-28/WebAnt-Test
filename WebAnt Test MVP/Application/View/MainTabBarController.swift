@@ -13,7 +13,8 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newVC = NewPhotosViewController() // = NewCollectionViewController.loadFromStoryBoard()
+        let newVC = NewPhotosViewController()
+        let popularVC = PopularPhotosViewController()
         
         tabBar.tintColor = .gray
         tabBar.tintColor = UIColor(red:0.992, green:0.176, blue:0.333, alpha:1.00)
@@ -21,10 +22,10 @@ class MainTabBarController: UITabBarController {
         viewControllers = [
             generateViewControllerWithNavigationBar(rootViewController: newVC,
                                                     imageResourceName: "newspaper",
-                                                    title: "New")
-//            generateViewController(rootViewController: ViewController(),
-//                                   imageResourceName: "flame",
-//                                   title: "Popular")
+                                                    title: "New"),
+            generateViewControllerWithNavigationBar(rootViewController: popularVC,
+                                                    imageResourceName: "flame",
+                                                    title: "Popular")
         ]
     }
     
@@ -52,11 +53,3 @@ class MainTabBarController: UITabBarController {
         return navigationVC
     }
 }
-
-
-
-//let netWorker = NewCollectionNetworkServices()
-//
-//netWorker.getNewPage(url: "http://gallery.dev.webant.ru/api/photos") { (response) in
-//    print(response!)
-//}

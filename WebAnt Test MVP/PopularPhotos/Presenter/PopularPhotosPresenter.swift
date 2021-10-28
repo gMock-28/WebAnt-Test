@@ -1,29 +1,29 @@
 //
-//  NewPhotosPresenter.swift
+//  PopularPhotosPresenter.swift
 //  WebAnt Test MVP
 //
-//  Created by Gold_Mock on 24.10.2021.
+//  Created by Gold_Mock on 28.10.2021.
 //
 
 import Foundation
 import UIKit
 import Alamofire
 
-protocol NewPhotosPresenterDelegate: AnyObject {
+protocol PopularPhotosPresenterDelegate: AnyObject {
     func presentPhotos(photos: [CellModel], refresh: Bool)
     func performErrors(error: Errors)
 }
 
-typealias NewPresenterDelegate = NewPhotosPresenterDelegate & UIViewController
+typealias PopularPresenterDelegate = PopularPhotosPresenterDelegate & UIViewController
 
-class NewPhotosPresenter {
+class PopularPhotosPresenter {
     
     private var totalPages = 1
     private var page = 0
     
-    weak var delegate: NewPresenterDelegate?
+    weak var delegate: PopularPresenterDelegate?
     
-    public func setViewDelegate(delegate: NewPresenterDelegate) {
+    public func setViewDelegate(delegate: PopularPresenterDelegate) {
         self.delegate = delegate
     }
     
@@ -45,7 +45,7 @@ class NewPhotosPresenter {
                 
                 self?.totalPages = response!.countOfPages
                 let items: [CellModel] = response!.data
-                    .filter({ $0.new == true })
+                    .filter({ $0.popular == true })
                     .map {
                         CellModel(name: $0.name ?? "",
                                   description: $0.description ?? "",
