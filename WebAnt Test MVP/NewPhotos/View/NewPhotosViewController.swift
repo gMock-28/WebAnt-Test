@@ -14,7 +14,7 @@ class NewPhotosViewController: UIViewController {
     
     // MARK: - Subviews
     
-    let noInternetImage: UIImageView = {
+    lazy var noInternetImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -25,7 +25,7 @@ class NewPhotosViewController: UIViewController {
         return imageView
     }()
     
-    let noInternetLabel: UILabel = {
+    lazy var noInternetLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
@@ -39,23 +39,23 @@ class NewPhotosViewController: UIViewController {
         return label
     }()
     
-    let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+    let spinner = UIActivityIndicatorView(style: .large)
     
     private let refreshControl = UIRefreshControl()
     
     @objc private func refreshPhotosList(_ sender: Any) {
         presenter.getNewPhotos(refresh: true)
     }
-
+    
     lazy var collectionView: UICollectionView = {
         
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
-        layout.itemSize = CGSize(width: (self.view.frame.width - 60)/2, height: (self.view.frame.height - 100)/6)
+        layout.itemSize = CGSize(width: (view.frame.width - 60)/2, height: (view.frame.height - 100)/6)
         layout.minimumInteritemSpacing = 20
         layout.minimumLineSpacing = 20
         
-        let collection = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        let collection = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collection.backgroundColor = .darkGray
         
         collection.dataSource = self
@@ -66,8 +66,8 @@ class NewPhotosViewController: UIViewController {
         
         // Register the FooterView
         collection.register(FooterView.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: "MyFooterView")
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                            withReuseIdentifier: "MyFooterView")
         
         (collection.collectionViewLayout as? UICollectionViewFlowLayout)?.footerReferenceSize = CGSize(width: collection.bounds.width, height: 50)
         
@@ -80,6 +80,11 @@ class NewPhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configure()
+    }
+    
+    func configure() {
         
         view.backgroundColor = .darkGray
 
@@ -133,6 +138,8 @@ extension NewPhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! CustomCell
+        
+        guard indexPath.row >= 0 && indexPath.row < photos.count else { return UICollectionViewCell() }
         cell.configure(model: photos[indexPath.row])
         
         return cell
@@ -162,7 +169,6 @@ extension NewPhotosViewController: UICollectionViewDataSource {
 extension NewPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("User Tapped!")
         let imageDetails = ImageDetailsViewController(model: photos[indexPath.row])
         self.present(imageDetails, animated: true, completion: nil)
     }

@@ -18,10 +18,7 @@ class ImageDetailsViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .black.withAlphaComponent(CGFloat(0.5))
-        
-        
-//        imageView.clipsToBounds = true
-        
+
         imageView.layer.cornerRadius = 7
         return imageView
         
@@ -52,6 +49,11 @@ class ImageDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configure()
+    }
+    
+    func configure() {
         
         view.backgroundColor = .darkGray.withAlphaComponent(CGFloat(0.9))
 

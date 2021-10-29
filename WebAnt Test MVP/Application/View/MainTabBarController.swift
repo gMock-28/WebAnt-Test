@@ -6,12 +6,16 @@
 //
 
 import UIKit
-import SwiftUI
 
 class MainTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configure()
+    }
+    
+    func configure() {
         
         let newVC = NewPhotosViewController()
         let popularVC = PopularPhotosViewController()
