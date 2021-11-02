@@ -16,12 +16,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let navAppearance = UINavigationBarAppearance()
         navAppearance.backgroundColor = .white
-//        navAppearance.backgroundColor = UIColor(red:0.127, green:0.120, blue:0.120, alpha:1.00)
+
         UINavigationBar.appearance().standardAppearance = navAppearance
         UINavigationBar.appearance().compactAppearance = navAppearance.copy()
         UINavigationBar.appearance().scrollEdgeAppearance = navAppearance.copy()
         
         let tabAppearance = UITabBarAppearance()
+        tabAppearance.backgroundColor = .white
         UITabBar.appearance().scrollEdgeAppearance = tabAppearance
         UITabBar.appearance().standardAppearance = tabAppearance.copy()
         

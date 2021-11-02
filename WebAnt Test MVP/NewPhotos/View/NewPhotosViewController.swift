@@ -205,11 +205,9 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
             noInternetLabel.isHidden = false
             self.refreshControl.endRefreshing()
 
-            print("No internet connection!")
         case .unableToParseData:
             print("Unable to parse data!")
         case .lastPage:
-            print("Last page!!!")
             spinner.stopAnimating()
         }
     }

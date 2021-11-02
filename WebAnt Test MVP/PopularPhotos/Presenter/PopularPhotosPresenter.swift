@@ -29,8 +29,6 @@ class PopularPhotosPresenter {
     
     public func getNewPhotos(refresh: Bool) {
         
-        print("GetNewPhotos")
-        
         if refresh {
             self.page = 1
         } else {

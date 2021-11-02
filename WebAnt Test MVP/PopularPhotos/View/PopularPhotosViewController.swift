@@ -163,7 +163,6 @@ extension PopularPhotosViewController: UICollectionViewDataSource {
 extension PopularPhotosViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("User Tapped!")
         let imageDetails = ImageDetailsViewController(model: popularPhotos[indexPath.row])
         self.navigationController?.pushViewController(imageDetails, animated: true)
     }
@@ -200,11 +199,9 @@ extension PopularPhotosViewController: PopularPhotosPresenterDelegate {
             noInternetLabel.isHidden = false
             self.refreshControl.endRefreshing()
 
-            print("No internet connection!")
         case .unableToParseData:
             print("Unable to parse data!")
         case .lastPage:
-            print("Last page!!!")
             spinner.stopAnimating()
         }
     }
