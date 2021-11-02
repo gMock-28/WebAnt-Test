@@ -16,10 +16,10 @@ class ImageDetailsViewController: UIViewController {
     private let detailsImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.backgroundColor = .black.withAlphaComponent(CGFloat(0.5))
 
-        imageView.layer.cornerRadius = 7
         return imageView
         
     }()
@@ -27,7 +27,7 @@ class ImageDetailsViewController: UIViewController {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = .purple
         label.textAlignment = .left
         
         label.font = UIFont(name: "Kailasa", size: CGFloat(40.0))
@@ -38,7 +38,7 @@ class ImageDetailsViewController: UIViewController {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = .gray
         label.textAlignment = .left
         label.numberOfLines = 0
         
@@ -55,7 +55,8 @@ class ImageDetailsViewController: UIViewController {
     
     func configure() {
         
-        view.backgroundColor = .darkGray.withAlphaComponent(CGFloat(0.9))
+        view.backgroundColor = .darkGray
+        navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(detailsImageView)
         view.addSubview(nameLabel)
@@ -73,12 +74,9 @@ class ImageDetailsViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             // Image
-            detailsImageView.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                                   constant: 24),
-            detailsImageView.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                                    constant: -24),
-            detailsImageView.topAnchor.constraint(equalTo: view.topAnchor,
-                                                  constant: 24),
+            detailsImageView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            detailsImageView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            detailsImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             detailsImageView.heightAnchor.constraint(equalTo: detailsImageView.widthAnchor,
                                                      multiplier: 3/4),
             
@@ -86,13 +84,13 @@ class ImageDetailsViewController: UIViewController {
             nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor,
                                             constant: 24),
             nameLabel.topAnchor.constraint(equalTo: detailsImageView.bottomAnchor,
-                                           constant: 32),
+                                           constant: 24),
             
             // Description Label
             descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                                   constant: 32),
+                                                   constant: 28),
             descriptionLabel.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                                    constant: -32),
+                                                    constant: -28),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,
                                                   constant: 8)
         ])

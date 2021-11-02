@@ -165,7 +165,7 @@ extension PopularPhotosViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User Tapped!")
         let imageDetails = ImageDetailsViewController(model: popularPhotos[indexPath.row])
-        self.present(imageDetails, animated: true, completion: nil)
+        self.navigationController?.pushViewController(imageDetails, animated: true)
     }
     
 }

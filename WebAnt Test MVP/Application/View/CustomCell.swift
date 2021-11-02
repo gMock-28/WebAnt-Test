@@ -36,6 +36,13 @@ class CustomCell: UICollectionViewCell {
         // Background
         contentView.backgroundColor = .secondaryLabel
         contentView.layer.cornerRadius = customImageView.layer.cornerRadius
+        
+        self.layer.borderWidth = 0.0
+        self.layer.shadowColor = UIColor.white.cgColor
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.shadowRadius = 5.0
+        self.layer.shadowOpacity = 1
+        self.layer.masksToBounds = false
 
         // Image View
         contentView.addSubview(customImageView)

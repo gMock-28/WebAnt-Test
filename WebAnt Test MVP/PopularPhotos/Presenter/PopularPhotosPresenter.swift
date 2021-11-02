@@ -63,7 +63,7 @@ class PopularPhotosPresenter {
     // MARK: - Network
     private func getNewPage(url: String, completion: @escaping (GetPhotosResponse?) -> ()){
 
-        AF.request(url).validate().responseJSON { (response) in
+        AF.request(url).validate().responseJSON { [weak self] (response) in
             
             switch response.result {
             case .success(let json):
@@ -71,11 +71,11 @@ class PopularPhotosPresenter {
                     let response = try GetPhotosResponse(json: json)
                     completion(response)
                 } catch {
-                    self.delegate?.performErrors(error: Errors.unableToParseData)
+                    self?.delegate?.performErrors(error: Errors.unableToParseData)
                 }
             case .failure(let error):
                 print(error)
-                self.delegate?.performErrors(error: Errors.noInternetConnection)
+                self?.delegate?.performErrors(error: Errors.noInternetConnection)
             }
         }
     }
