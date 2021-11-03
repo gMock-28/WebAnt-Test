@@ -37,7 +37,11 @@ class MainTabBarController: UITabBarController {
                                         imageResourceName: String,
                                         title: String) -> UIViewController {
         let viewController = rootViewController
-        viewController.tabBarItem.image = UIImage(systemName: imageResourceName)
+        if #available(iOS 13.0, *) {
+            viewController.tabBarItem.image = UIImage(systemName: imageResourceName)
+        } else {
+            viewController.tabBarItem.image = UIImage(named: imageResourceName)
+        }
         viewController.tabBarItem.title = title
         
         return viewController
@@ -48,7 +52,11 @@ class MainTabBarController: UITabBarController {
                                                          title: String) -> UIViewController {
         
         let navigationVC = UINavigationController(rootViewController: rootViewController)
-        navigationVC.tabBarItem.image = UIImage(systemName: imageResourceName)
+        if #available(iOS 13.0, *) {
+            navigationVC.tabBarItem.image = UIImage(systemName: imageResourceName)
+        } else {
+            navigationVC.tabBarItem.image = UIImage(named: imageResourceName)
+        }
         navigationVC.tabBarItem.title = title
         rootViewController.navigationItem.title = title
         

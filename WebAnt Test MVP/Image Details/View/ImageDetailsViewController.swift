@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import MapKit
+//import MapKit
 import SwiftUI
 
 class ImageDetailsViewController: UIViewController {
@@ -55,7 +55,7 @@ class ImageDetailsViewController: UIViewController {
     
     func configure() {
         
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .white
         navigationItem.largeTitleDisplayMode = .never
 
         view.addSubview(detailsImageView)

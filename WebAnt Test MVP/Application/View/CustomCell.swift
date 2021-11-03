@@ -9,8 +9,6 @@ import Foundation
 import UIKit
 import SwiftUI
 
-
-
 class CustomCell: UICollectionViewCell {
     
     private let customImageView: CustomImageView = {
@@ -23,7 +21,12 @@ class CustomCell: UICollectionViewCell {
     }()
     
     private let activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
+        let activityIndicator: UIActivityIndicatorView
+        if #available(iOS 13.0, *) {
+            activityIndicator = UIActivityIndicatorView(style: .large)
+        } else {
+            activityIndicator = UIActivityIndicatorView()
+        }
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
         
@@ -34,13 +37,13 @@ class CustomCell: UICollectionViewCell {
         super.init(frame: .zero)
         
         // Background
-        contentView.backgroundColor = .secondaryLabel
+        contentView.backgroundColor = .gray
         contentView.layer.cornerRadius = customImageView.layer.cornerRadius
         
         self.layer.borderWidth = 0.0
-        self.layer.shadowColor = UIColor.white.cgColor
+        self.layer.shadowColor = UIColor.gray.cgColor
         self.layer.shadowOffset = CGSize(width: 0, height: 0)
-        self.layer.shadowRadius = 10.0
+        self.layer.shadowRadius = 5.0
         self.layer.shadowOpacity = 1
         self.layer.masksToBounds = false
 

@@ -40,7 +40,7 @@ class PopularPhotosViewController: UIViewController {
         return label
     }()
     
-    let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+    var spinner: UIActivityIndicatorView
     
     private let refreshControl = UIRefreshControl()
     
@@ -57,7 +57,7 @@ class PopularPhotosViewController: UIViewController {
         layout.minimumLineSpacing = 20
         
         let collection = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        collection.backgroundColor = .darkGray
+        collection.backgroundColor = .white
         
         collection.dataSource = self
         collection.delegate = self
@@ -79,10 +79,24 @@ class PopularPhotosViewController: UIViewController {
     
     //MARK: - viewDidLoad
     
+    init() {
+        if #available(iOS 13.0, *) {
+            spinner = UIActivityIndicatorView(style: .large)
+        } else {
+            spinner = UIActivityIndicatorView()
+        }
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .white
 
         // Collection
         view.addSubview(collectionView)
