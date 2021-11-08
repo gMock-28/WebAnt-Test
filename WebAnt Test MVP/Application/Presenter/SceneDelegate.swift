@@ -15,8 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @available(iOS 13.0, *)
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
+        let backButtonBackgroundImage = UIImage(systemName: "arrow.backward")
         let navAppearance = UINavigationBarAppearance()
         navAppearance.backgroundColor = .white
+        navAppearance.setBackIndicatorImage(backButtonBackgroundImage, transitionMaskImage: backButtonBackgroundImage)
+        navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)]
+        navAppearance.titleTextAttributes = [.foregroundColor: UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)]
+        navAppearance.shadowColor = .white
 
         UINavigationBar.appearance().standardAppearance = navAppearance
         UINavigationBar.appearance().compactAppearance = navAppearance.copy()

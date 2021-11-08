@@ -25,7 +25,7 @@ class MainTabBarController: UITabBarController {
         
         viewControllers = [
             generateViewControllerWithNavigationBar(rootViewController: newVC,
-                                                    imageResourceName: "newspaper",
+                                                    imageResourceName: "doc.text.image",
                                                     title: "New"),
             generateViewControllerWithNavigationBar(rootViewController: popularVC,
                                                     imageResourceName: "flame",
@@ -57,6 +57,7 @@ class MainTabBarController: UITabBarController {
         } else {
             navigationVC.tabBarItem.image = UIImage(named: imageResourceName)
         }
+        
         navigationVC.tabBarItem.title = title
         rootViewController.navigationItem.title = title
         

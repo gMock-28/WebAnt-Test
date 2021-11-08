@@ -30,7 +30,7 @@ class ImageDetailsViewController: UIViewController {
         label.textColor = .purple
         label.textAlignment = .left
         
-        label.font = UIFont(name: "Kailasa", size: CGFloat(40.0))
+        label.font = UIFont(name: "SFCompactDisplay-Semibold", size: 20)
         
         return label
     }()
@@ -42,8 +42,8 @@ class ImageDetailsViewController: UIViewController {
         label.textAlignment = .left
         label.numberOfLines = 0
         
-        label.font = UIFont(name: "Kailasa", size: CGFloat(20.0))
-        
+        label.font = UIFont(name: "SFCompactDisplay-Regular", size: 12)
+         
         return label
     }()
     
@@ -56,7 +56,9 @@ class ImageDetailsViewController: UIViewController {
     func configure() {
         
         view.backgroundColor = .white
+        
         navigationItem.largeTitleDisplayMode = .never
+        self.navigationController!.navigationBar.tintColor = UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)
 
         view.addSubview(detailsImageView)
         view.addSubview(nameLabel)
@@ -82,17 +84,17 @@ class ImageDetailsViewController: UIViewController {
             
             // Name Label
             nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                            constant: 24),
+                                            constant: 20),
             nameLabel.topAnchor.constraint(equalTo: detailsImageView.bottomAnchor,
-                                           constant: 24),
+                                           constant: 20),
             
             // Description Label
             descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor,
-                                                   constant: 28),
+                                                   constant: 20),
             descriptionLabel.rightAnchor.constraint(equalTo: view.rightAnchor,
-                                                    constant: -28),
+                                                    constant: -57),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,
-                                                  constant: 8)
+                                                  constant: 20)
         ])
     }
     

@@ -25,15 +25,29 @@ class NewPhotosViewController: UIViewController {
         return imageView
     }()
     
+    lazy var noInternetLargeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.isHidden = true
+        
+        label.font = UIFont(name: "SFCompactDisplay-Semibold", size: 20.0)
+        label.text = "Oh shucks!";
+        
+        return label
+    }()
+    
     lazy var noInternetLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .gray
+        label.textColor = .darkGray
         label.textAlignment = .center
         label.numberOfLines = 0
         label.isHidden = true
         
-        label.font = UIFont(name: "Kailasa", size: CGFloat(12.0))
+        label.font = UIFont(name: "SFCompactDisplay-Regular", size: 12.0)
         label.text = "Slow or no internet connection.\nPlease check your internet settings."
         
         return label
@@ -102,6 +116,8 @@ class NewPhotosViewController: UIViewController {
     
     func configure() {
         
+        navigationItem.backButtonTitle = ""
+        
         view.backgroundColor = .white
 
         // Collection
@@ -109,6 +125,7 @@ class NewPhotosViewController: UIViewController {
         
         // No Internet Image
         view.addSubview(noInternetImage)
+        view.addSubview(noInternetLargeLabel)
         view.addSubview(noInternetLabel)
         noInternetConstraints()
         
@@ -135,10 +152,15 @@ class NewPhotosViewController: UIViewController {
             noInternetImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             noInternetImage.heightAnchor.constraint(equalTo: noInternetImage.widthAnchor),
             
+            // Large label
+            noInternetLargeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noInternetLargeLabel.topAnchor.constraint(equalTo: noInternetImage.bottomAnchor,
+                                                      constant: 10),
+            
             // Label
             noInternetLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            noInternetLabel.topAnchor.constraint(equalTo: noInternetImage.bottomAnchor,
-                                                 constant: 16)
+            noInternetLabel.topAnchor.constraint(equalTo: noInternetLargeLabel.bottomAnchor,
+                                                 constant: 10)
         ])
     }
     
@@ -201,6 +223,7 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
             self.refreshControl.endRefreshing()
             
             noInternetImage.isHidden = true
+            noInternetLargeLabel.isHidden = true
             noInternetLabel.isHidden = true
         } else {
             let indexPath = IndexPath(row: self.photos.count, section: 0)
@@ -218,6 +241,7 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
             collectionView.reloadData()
             
             noInternetImage.isHidden = false
+            noInternetLargeLabel.isHidden = false
             noInternetLabel.isHidden = false
             self.refreshControl.endRefreshing()
 
