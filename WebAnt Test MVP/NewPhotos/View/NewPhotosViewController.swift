@@ -226,10 +226,11 @@ extension NewPhotosViewController: NewPhotosPresenterDelegate {
             noInternetLargeLabel.isHidden = true
             noInternetLabel.isHidden = true
         } else {
-            let indexPath = IndexPath(row: self.photos.count, section: 0)
+//            let indexPath = IndexPath(row: self.photos.count, section: 0)
             self.photos.append(contentsOf: photos)
             spinner.stopAnimating()
-            self.collectionView.insertItems(at: [indexPath])
+            self.collectionView.reloadData()
+//            self.collectionView.insertItems(at: [indexPath])
         }
     }
     

@@ -10,16 +10,43 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        UINavigationBar.appearance().barTintColor = UIColor(red: 234.0/255.0, green: 46.0/255.0, blue: 73.0/255.0, alpha: 1.0)
-        UINavigationBar.appearance().tintColor = UIColor.black
-//        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black]
+    var window: UIWindow?   // For iOS 12
+    
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         
+        if #available(iOS 13.0, *) {
+            // In iOS 13 setup is done in SceneDelegate
+        } else {
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            self.window = window
+        
+            let viewController = MainTabBarController()
+            window.rootViewController = viewController
+        }
         
         return true
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        let backButtonBackgroundImage = UIImage(named: "arrow.backward")
+        UINavigationBar.appearance().backgroundColor = .white
+        UINavigationBar.appearance().backIndicatorImage = backButtonBackgroundImage
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = backButtonBackgroundImage
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(red: 47/255.0, green: 23/255.0, blue: 103/255.0, alpha: 1/1.0)]
+        UINavigationBar.appearance().shadowImage = UIImage()
+        
+        if #available(iOS 13.0, *) {
+            // In iOS 13 setup is done in SceneDelegate
+        } else {
+            self.window?.makeKeyAndVisible()
+        }
+        return true
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        
     }
 
     // MARK: UISceneSession Lifecycle
