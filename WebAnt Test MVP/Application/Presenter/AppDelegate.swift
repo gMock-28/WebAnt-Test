@@ -11,19 +11,19 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?   // For iOS 12
-    
+
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        
+
         if #available(iOS 13.0, *) {
             // In iOS 13 setup is done in SceneDelegate
         } else {
             let window = UIWindow(frame: UIScreen.main.bounds)
             self.window = window
-        
+
             let viewController = MainTabBarController()
             window.rootViewController = viewController
         }
-        
+
         return true
     }
     
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        
+
     }
 
     // MARK: UISceneSession Lifecycle
